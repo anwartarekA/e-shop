@@ -1,0 +1,27 @@
+{
+  "name": "e-shop",
+  "version": "1.0.0",
+  "description": "e-shop application with node js",
+  "license": "ISC",
+  "author": "anwar tarek",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "body-parser": "^2.2.1",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "express-jwt": "^8.5.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.0.2",
+    "morgan": "^1.10.1",
+    "multer": "^2.0.2",
+    "nodemon": "^3.1.11",
+    "prettier": "^3.7.4",
+    "validator": "^13.15.26"
+  }
+}
