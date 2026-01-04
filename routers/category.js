@@ -4,8 +4,10 @@ const router = express.Router();
 const AppError = require("./../helpers/appError");
 const catchAsync = require("./../helpers/catchAsync");
 const { Category } = require("./../models/category");
+const isAdmin = require("./../helpers/isadmin");
 router.post(
   "/",
+  isAdmin,
   catchAsync(async (req, res, next) => {
     const newCategory = new Category({
       name: req.body.name,
@@ -49,6 +51,7 @@ router.get(
 );
 router.put(
   "/:id",
+  isAdmin,
   catchAsync(async (req, res, next) => {
     const { id } = req.params;
     if (!id) return next(new AppError("provide id", 400));
@@ -71,6 +74,7 @@ router.put(
 );
 router.delete(
   "/:id",
+  isAdmin,
   catchAsync(async (req, res, next) => {
     const { id } = req.params;
     if (!id) return next(new AppError("provide id", 400));

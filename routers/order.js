@@ -7,9 +7,10 @@ const { OrderItem } = require("./../models/orderItems");
 const { Product } = require("./../models/product");
 const catchAsync = require("./../helpers/catchAsync");
 const AppError = require("./../helpers/appError");
-const { populate } = require("dotenv");
+const isAdmin = require("../helpers/isadmin");
 router.post(
   "/",
+  isAdmin,
   catchAsync(async (req, res, next) => {
     // const token = req.headers.authorization.split(" ")[1];
     const token = req.headers.cookie.split("=")[1];
@@ -87,6 +88,7 @@ router.get(
 );
 router.put(
   "/:id",
+  isAdmin,
   catchAsync(async (req, res, next) => {
     const { id } = req.params;
     if (!id) return next(new AppError("provide product id", 400));
@@ -109,6 +111,7 @@ router.put(
 );
 router.delete(
   "/:id",
+  isAdmin,
   catchAsync(async (req, res, next) => {
     const { id } = req.params;
     if (!id) return next(new AppError("provide product id", 400));

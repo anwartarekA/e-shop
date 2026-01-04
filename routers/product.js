@@ -7,11 +7,13 @@ const { Product } = require("./../models/product");
 const { Category } = require("./../models/category");
 const multer = require("multer");
 const storage = require("./../helpers/upload");
+const isAdmin = require("./../helpers/isadmin");
 const upload = multer({
   storage: storage,
 });
 router.post(
   "/",
+  isAdmin,
   upload.fields([
     { name: "image", maxCount: 1 },
     { name: "images", maxCount: 10 },
@@ -94,6 +96,7 @@ router.get(
 );
 router.put(
   "/:id",
+  isAdmin,
   upload.fields([
     { name: "image", maxCount: 1 },
     { name: "images", maxCount: 10 },
@@ -139,6 +142,7 @@ router.put(
 );
 router.delete(
   "/:id",
+  isAdmin,
   catchAsync(async (req, res, next) => {
     const { id } = req.params;
     if (!id) return next(new AppError("provide product id", 400));

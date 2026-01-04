@@ -9,7 +9,6 @@ const checkJwt = () => {
         return req.cookies.cookie_token;
       }
     },
-    isRevoked: revoke,
   }).unless({
     path: [
       { url: /\/api\/v1\/products(.*)/, methods: ["GET", "OPTIONS"] },
@@ -23,8 +22,5 @@ const checkJwt = () => {
     ],
   });
 };
-function revoke(req, token) {
-  if (!token.payload.isAdmin) return true;
-  return false;
-}
+
 module.exports = checkJwt;

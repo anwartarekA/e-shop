@@ -7,8 +7,10 @@ const AppError = require("./../helpers/appError");
 const catchAsync = require("./../helpers/catchAsync");
 const { User } = require("./../models/user");
 const createTokenAndSendCookie = require("./../helpers/createTokenAndSendCookie");
+const isAdmin = require("./../helpers/isadmin");
 router.post(
   "/",
+  isAdmin,
   catchAsync(async (req, res, next) => {
     const newUser = new User({
       name: req.body.name,
@@ -57,6 +59,7 @@ router.post(
 );
 router.get(
   `/`,
+  isAdmin,
   catchAsync(async (req, res, next) => {
     const users = await User.find().select("-password -__v");
     if (!users)
@@ -90,6 +93,7 @@ router.get(
 );
 router.put(
   "/:id",
+  isAdmin,
   catchAsync(async (req, res, next) => {
     const { id } = req.params;
     if (!id) return next(new AppError("provide user id", 400));
