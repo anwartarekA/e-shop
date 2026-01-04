@@ -1,17 +1,31 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const multer = require("multer");
 const router = express.Router();
 const AppError = require("./../helpers/appError");
 const catchAsync = require("./../helpers/catchAsync");
 const { Product } = require("./../models/product");
 const { Category } = require("./../models/category");
-const stortage = multer.diskStorage({
-  filename: (req, file, cb) => {},
+const multer = require("multer");
+const storage = require("./../helpers/upload");
+const upload = multer({
+  storage: storage,
 });
 router.post(
   "/",
+  upload.fields([
+    { name: "image", maxCount: 1 },
+    { name: "images", maxCount: 10 },
+  ]),
   catchAsync(async (req, res, next) => {
+    // http://localhost:3000/public/uploads/adasdjask
+    let path, paths;
+    if (req.files["image"])
+      path = `${req.protocol}://${req.get("host")}/${req.files["image"][0].path}`;
+
+    if (req.files["images"])
+      paths = req.files["images"].map(
+        (file) => `${req.protocol}://${req.get("host")}/${file.path}`,
+      );
     const checkCategoryId = mongoose.isValidObjectId(req.body.category);
     if (!checkCategoryId)
       return next(new AppError("not valid category id", 400));
@@ -23,8 +37,8 @@ router.post(
       price: req.body.price,
       amountInStock: req.body.amountInStock,
       description: req.body.description,
-      image: req.body.image,
-      images: req.body.images,
+      image: path,
+      images: paths,
       richDescription: req.body.richDescription,
       category: req.body.category,
       brand: req.body.brand,
@@ -80,12 +94,23 @@ router.get(
 );
 router.put(
   "/:id",
+  upload.fields([
+    { name: "image", maxCount: 1 },
+    { name: "images", maxCount: 10 },
+  ]),
   catchAsync(async (req, res, next) => {
     const { id } = req.params;
     if (!id) return next(new AppError("provide product id", 400));
     if (!mongoose.isValidObjectId(id))
       return next(new AppError("product id is not valid", 500));
+    let path, paths;
+    if (req.files["image"])
+      path = `${req.protocol}://${req.get("host")}/${req.files["image"][0].path}`;
 
+    if (req.files["images"])
+      paths = req.files["images"].map(
+        (file) => `${req.protocol}://${req.get("host")}/${file.path}`,
+      );
     const updatedProduct = await Product.findByIdAndUpdate(
       id,
       {
@@ -93,8 +118,8 @@ router.put(
         price: req.body.price,
         amountInStock: req.body.amountInStock,
         description: req.body.description,
-        image: req.body.image,
-        images: req.body.images,
+        image: path,
+        images: paths,
         richDescription: req.body.richDescription,
         category: req.body.category,
         brand: req.body.brand,
